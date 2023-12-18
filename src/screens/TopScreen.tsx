@@ -2,7 +2,7 @@
 
 import { Result } from '@/components/Result'
 import { Top } from '@/components/Top'
-import { GoogleAdScript } from '@/components/googleads-script'
+import GoogleAd from '@/components/googlead'
 import { SetterOrUpdater, atom, useRecoilState } from 'recoil'
 
 export type IFormInput = {
@@ -21,7 +21,7 @@ export default function TopScreen() {
     <div className="flex flex-col gap-4 w-full">
       <Top prompt={prompt} setPrompt={setPrompt} />
       <Result prompt={prompt} />
-      <GoogleAdScript />
+      <GoogleAd slot="1869410932032409" />
     </div>
   )
 }
