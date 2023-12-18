@@ -1,6 +1,7 @@
 'use client'
 
 import type { IFormInput } from '@/screens/TopScreen'
+import axios from 'axios'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { atom, useRecoilState } from 'recoil'
 
@@ -9,24 +10,35 @@ const isLoading = atom({
   default: false,
 })
 
+const error = atom({
+  key: 'error',
+  default: '',
+})
+
 export const Top = (props: IFormInput) => {
   const { setPrompt } = props
   const { register, handleSubmit } = useForm<IFormInput>()
   const [load, setLoad] = useRecoilState(isLoading)
+  const [err, setErr] = useRecoilState(error)
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    // TODO: URLを環境変数にする
-    setLoad(true)
-    const res = await fetch('http://localhost:8080/prompt', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data.prompt),
-    })
-    const resData: IFormInput = await res.json()
-    setPrompt(resData.prompt)
-    setLoad(false)
+    try {
+      setLoad(true)
+      const res = await axios.post('http://localhost:8080/prompt', {
+        prompt: data.prompt,
+      })
+
+      // error handling
+      if (res.status !== 200) {
+        throw new Error('Network response was not ok')
+      }
+      const resData = await res.data
+      setPrompt(resData.prompt)
+      setLoad(false)
+    } catch (e) {
+      console.log(e)
+      setLoad(false)
+    }
   }
 
   return (
@@ -43,15 +55,16 @@ export const Top = (props: IFormInput) => {
               "title" varchar NOT NULL,
               "contents" varchar NOT NULL
             )'
-            rows={10}
+            rows={15}
           />
           <input
             className="rounded-md bg-lime-500 px-4 py-2 hover:opacity-80 cursor-pointer"
             disabled={load}
-            name="submit"
+            value={load ? 'loading...' : '送信'}
             type="submit"
           />
         </div>
+        {err && <p className="text-red-500">{err}</p>}
       </form>
     </div>
   )
