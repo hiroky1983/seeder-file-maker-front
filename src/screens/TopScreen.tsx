@@ -10,13 +10,13 @@ export type IFormInput = {
   setPrompt: SetterOrUpdater<string>
 }
 
-const FormInput = atom({
+const formInput = atom({
   key: 'prompt',
   default: '',
 })
 
 export default function TopScreen() {
-  const [prompt, setPrompt] = useRecoilState(FormInput)
+  const [prompt, setPrompt] = useRecoilState(formInput)
   return (
     <div className="flex flex-col gap-4 w-full">
       <Top prompt={prompt} setPrompt={setPrompt} />

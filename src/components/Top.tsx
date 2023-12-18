@@ -2,13 +2,21 @@
 
 import type { IFormInput } from '@/screens/TopScreen'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { atom, useRecoilState } from 'recoil'
+
+const isLoading = atom({
+  key: 'isLoading',
+  default: false,
+})
 
 export const Top = (props: IFormInput) => {
   const { setPrompt } = props
   const { register, handleSubmit } = useForm<IFormInput>()
+  const [load, setLoad] = useRecoilState(isLoading)
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     // TODO: URLを環境変数にする
+    setLoad(true)
     const res = await fetch('http://localhost:8080/prompt', {
       method: 'POST',
       headers: {
@@ -18,6 +26,7 @@ export const Top = (props: IFormInput) => {
     })
     const resData: IFormInput = await res.json()
     setPrompt(resData.prompt)
+    setLoad(false)
   }
 
   return (
@@ -38,6 +47,8 @@ export const Top = (props: IFormInput) => {
           />
           <input
             className="rounded-md bg-lime-500 px-4 py-2 hover:opacity-80 cursor-pointer"
+            disabled={load}
+            name="submit"
             type="submit"
           />
         </div>

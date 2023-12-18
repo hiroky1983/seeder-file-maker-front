@@ -3,7 +3,7 @@
 import { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 
-const PUBLISHER_ID = 'xxxxxxxxxxxxxxxxx'
+const PUBLISHER_ID = '1869410932032409'
 
 declare global {
   interface Window {
