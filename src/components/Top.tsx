@@ -24,6 +24,7 @@ export const Top = (props: IFormInput) => {
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     try {
       setLoad(true)
+      setErr('')
       const res = await axios.post('http://localhost:8080/prompt', {
         prompt: data.prompt,
       })
@@ -35,9 +36,16 @@ export const Top = (props: IFormInput) => {
       const resData = await res.data
       setPrompt(resData.prompt)
       setLoad(false)
-    } catch (e) {
-      console.log(e)
-      setLoad(false)
+    } catch (error) {
+      if (
+        axios.isAxiosError(error) &&
+        error.response &&
+        error.response.status === 400
+      ) {
+        console.log(error.response.data)
+        setErr(error.response.data.message)
+        setLoad(false)
+      }
     }
   }
 
