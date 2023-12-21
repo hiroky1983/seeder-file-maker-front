@@ -36,7 +36,10 @@ function GoogleAd({
   }, [pathname])
 
   return (
-    <div key={`${pathname.replace(/\//g, '-')}-${slot}`}>
+    <div
+      key={`${pathname.replace(/\//g, '-')}-${slot}`}
+      data-testid="googlead-component"
+    >
       <ins
         className="adsbygoogle"
         style={{ display: 'block', width: '100%', ...style }}

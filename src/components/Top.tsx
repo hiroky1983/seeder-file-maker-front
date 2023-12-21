@@ -50,7 +50,7 @@ export const Top = (props: IFormInput) => {
   }
 
   return (
-    <div className="gap-3 w-full">
+    <div className="gap-3 w-full" data-testid="top-component">
       <h1>seederファイルメーカー</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col px-4 py-12 gap-4 bg-gray-600">

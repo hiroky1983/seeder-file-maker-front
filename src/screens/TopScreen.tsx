@@ -19,7 +19,7 @@ export default function TopScreen() {
   const [prompt, setPrompt] = useRecoilState(formInput)
   return (
     <div className="flex flex-col gap-4 w-full">
-      <Top prompt={prompt} setPrompt={setPrompt} />
+      <Top prompt={prompt} setPrompt={setPrompt}  />
       <Result prompt={prompt} />
       <GoogleAd slot="1869410932032409" />
     </div>
