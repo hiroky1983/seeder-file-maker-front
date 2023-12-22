@@ -1,9 +1,10 @@
 'use client'
 
-import type { IFormInput } from '@/screens/TopScreen'
-import axios from 'axios'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import axios, { isAxiosError } from 'axios'
+import type { SubmitHandler} from 'react-hook-form';
+import { useForm } from 'react-hook-form'
 import { atom, useRecoilState } from 'recoil'
+import type { IFormInput } from '@/screens/TopScreen'
 
 const isLoading = atom({
   key: 'isLoading',
@@ -38,7 +39,7 @@ export const Top = (props: IFormInput) => {
       setLoad(false)
     } catch (error) {
       if (
-        axios.isAxiosError(error) &&
+        isAxiosError(error) &&
         error.response &&
         error.response.status === 400
       ) {
