@@ -1,7 +1,7 @@
 'use client'
 
 import axios, { isAxiosError } from 'axios'
-import type { SubmitHandler} from 'react-hook-form';
+import type { SubmitHandler } from 'react-hook-form'
 import { useForm } from 'react-hook-form'
 import { atom, useRecoilState } from 'recoil'
 import type { IFormInput } from '@/screens/TopScreen'
@@ -22,11 +22,13 @@ export const Top = (props: IFormInput) => {
   const [load, setLoad] = useRecoilState(isLoading)
   const [err, setErr] = useRecoilState(error)
 
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL
+
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     try {
       setLoad(true)
       setErr('')
-      const res = await axios.post('http://localhost:8080/prompt', {
+      const res = await axios.post(`${appUrl}/prompt`, {
         prompt: data.prompt,
       })
 
