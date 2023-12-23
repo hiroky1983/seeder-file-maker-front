@@ -28,9 +28,17 @@ export const Top = (props: IFormInput) => {
     try {
       setLoad(true)
       setErr('')
-      const res = await axios.post(`${appUrl}/prompt`, {
-        prompt: data.prompt,
-      })
+      const res = await axios.post(
+        `${appUrl}/prompt`,
+        {
+          prompt: data.prompt,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
 
       // error handling
       if (res.status !== 200) {
