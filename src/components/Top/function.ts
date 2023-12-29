@@ -1,5 +1,5 @@
-import type { IFormInput } from '@/screens/TopScreen'
 import axios from 'axios'
+import type { IFormInput } from '@/screens/TopScreen'
 
 export const getSqlSeederPrompt = (
   data: IFormInput,

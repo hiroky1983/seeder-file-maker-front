@@ -4,8 +4,8 @@ import { isAxiosError } from 'axios'
 import type { SubmitHandler } from 'react-hook-form'
 import { useForm } from 'react-hook-form'
 import { atom, useRecoilState } from 'recoil'
-import type { IFormInput } from '@/screens/TopScreen'
 import { getSqlSeederPrompt } from './function'
+import type { IFormInput } from '@/screens/TopScreen'
 
 const isLoadingState = atom({
   key: 'isLoading',
