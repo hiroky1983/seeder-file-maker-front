@@ -1,17 +1,18 @@
 'use client'
 
-import axios, { isAxiosError } from 'axios'
+import { isAxiosError } from 'axios'
 import type { SubmitHandler } from 'react-hook-form'
 import { useForm } from 'react-hook-form'
 import { atom, useRecoilState } from 'recoil'
 import type { IFormInput } from '@/screens/TopScreen'
+import { getSqlSeederPrompt } from './function'
 
-const isLoading = atom({
+const isLoadingState = atom({
   key: 'isLoading',
   default: false,
 })
 
-const error = atom({
+const errorState = atom({
   key: 'error',
   default: '',
 })
@@ -19,49 +20,37 @@ const error = atom({
 export const Top = (props: IFormInput) => {
   const { setPrompt } = props
   const { register, handleSubmit } = useForm<IFormInput>()
-  const [load, setLoad] = useRecoilState(isLoading)
-  const [err, setErr] = useRecoilState(error)
+  const [isLoading, setisLoading] = useRecoilState(isLoadingState)
+  const [error, setError] = useRecoilState(errorState)
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     try {
-      setLoad(true)
-      setErr('')
-      const res = await axios.post(
-        `${appUrl}/prompt`,
-        {
-          prompt: data.prompt,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }
-      )
+      setisLoading(true)
+      setError('')
+      const res = await getSqlSeederPrompt(data, appUrl)
 
-      // error handling
       if (res.status !== 200) {
         throw new Error('Network response was not ok')
       }
-      const resData = await res.data
+      const resData = res.data
       setPrompt(resData.prompt)
-      setLoad(false)
+      setisLoading(false)
     } catch (error) {
       if (
         isAxiosError(error) &&
         error.response &&
         error.response.status === 400
       ) {
-        console.log(error.response.data)
-        setErr(error.response.data.message)
-        setLoad(false)
+        setError(error.response.data.message)
+        setisLoading(false)
       }
     }
   }
 
   return (
-    <div className="gap-3 w-full" data-testid="top-component">
+    <div className="max-w-1/2" data-testid="top-component">
       <h1>seederファイルメーカー</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col px-4 py-12 gap-4 bg-gray-600">
@@ -78,12 +67,12 @@ export const Top = (props: IFormInput) => {
           />
           <input
             className="rounded-md bg-lime-500 px-4 py-2 hover:opacity-80 cursor-pointer"
-            disabled={load}
-            value={load ? 'loading...' : '送信'}
+            disabled={isLoading}
+            value={isLoading ? 'loading...' : '送信'}
             type="submit"
           />
         </div>
-        {err && <p className="text-red-500">{err}</p>}
+        {error && <p className="text-red-500">{error}</p>}
       </form>
     </div>
   )
